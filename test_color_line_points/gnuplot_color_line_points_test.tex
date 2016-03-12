@@ -1,0 +1,28 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[small, labelfont = bf]{caption}
+\usepackage{epstopdf}
+% \usepackage[hypcap = false]{caption} % to add user defined captions
+
+\begin{document}
+
+\begin{center}
+    \huge{gnuplot Color, Point and Line Test}
+    \vspace{10mm}
+\end{center}
+
+\section{gnuplot Test}
+
+    This file shows the values for color and line and point style that are being used in this code. Note that this for terminal \textit{epslatex}. 
+
+\vspace{\fill}
+\begin{figure*}[h]
+	\centering
+% 	\includegraphics{test_plot}
+	\scalebox{0.85}{\input{test_color.tex}}
+	\caption{\label{fig:test} Use this for setting the color in \LaTeX.}
+\end{figure*}
+\vspace{\fill}
+
+\end{document}
