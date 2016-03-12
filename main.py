@@ -51,18 +51,18 @@ def gnuplot(fig_params, plot_params, x, y, output_file):
 						'double dot': 4}
 	
 	
-		term_set = ('\n'+'set terminal '+fig_params.terminal+' size '+fig_params.fig_size[0]+
-					fig_params.units+', '+fig_params.fig_size[1]+fig_params.units+'\n')
+		term_set = ('set terminal '+fig_params.terminal+' size '+fig_params.fig_size[0]
+					+fig_params.units+', '+fig_params.fig_size[1]+fig_params.units)
 		if fig_params.color == True:
 			term_set += ' color'
 		if fig_params.colortext == True:
 			term_set += ' colortext'
-		term_set = term_set + ' ' + fig_params.border_line
+		term_set = term_set + ' ' + fig_params.border_line+'; '
 		print(term_set)
-		output = 'set output ' + '\'' + output_file + '\'' + '\n'
+		output = 'set output ' + '\'' + output_file + '\'' + ';'
 		print(output)
 		# launch gnuplot
-		call('gnuplot \n exit', shell=True)
+		call('gnuplot -e \"'+term_set+output+' plot sin(x) notitle\"', shell=True)
 		# process = subprocess.Popen('gnuplot', stdout=subprocess.PIPE)
 		# output = process.communicate()[0]
 		# print(output)
@@ -88,7 +88,7 @@ def main():
 	# %% Plot with Gnuplot
 	fig_params = FigParams()
 	plot_params = PlotParams()
-	output_file = '/plots/output.tex'
+	output_file = 'plots/output.tex'
 	gnuplot(fig_params=fig_params, plot_params=plot_params,
 			x=t, y=y, output_file=output_file)
  
