@@ -6,7 +6,7 @@ This will enable gnuplot to be called from a Python script.
 
 - Plots can be made using terminals *xterm*, *epslatex* and *postscript eps*.
 - Basic x and y plots are only supported.
-- Data files are exported and passed to gnu plot for plotting.
+- Data files are exported and passed to gnuplot for plotting.
 
 #### Future
 
