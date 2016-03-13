@@ -20,11 +20,11 @@
   \providecommand\rotatebox[2]{#2}%
   \@ifundefined{ifGPcolor}{%
     \newif\ifGPcolor
-    \GPcolortrue
+    \GPcolorfalse
   }{}%
   \@ifundefined{ifGPblacktext}{%
     \newif\ifGPblacktext
-    \GPblacktextfalse
+    \GPblacktexttrue
   }{}%
   % define a \g@addto@macro without @ in the name:
   \let\gplgaddtomacro\g@addto@macro
