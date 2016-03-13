@@ -1,7 +1,12 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
+
+# gnuplot/ example / files
+gnuplot_examples/
+*.gp
 
 # C extensions
 *.so
