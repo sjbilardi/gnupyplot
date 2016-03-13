@@ -5,7 +5,7 @@ __pycache__/
 *$py.class
 
 # gnuplot/ example / files
-gnuplot_examples/
+_gnuplot_examples/
 *.gp
 
 # C extensions
