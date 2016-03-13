@@ -12,4 +12,4 @@ This will enable gnuplot to be called from a Python script.
 
 - Linear regression
 - Best fit lines, linear and nonlinear
-- Print equations to plot and R$^2$
+- Print equations to plot and R squared
