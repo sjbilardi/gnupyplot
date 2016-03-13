@@ -73,8 +73,8 @@ def gnuplot(fig_params, plot_params, data, output_file):
 
 	# fig_params.terminal == 'epslatex':
 	# These dictionaries are for the use with "epslatex"
-	ColorParams = {'black': 8, 'purple': 1, 'green': 2, 'light_blue': 3,
-	 			   'orange': 4, 'yellow': 5, 'dark_blue': 6, 'red': 7}
+	ColorParams = {'black': 8, 'purple': 1, 'green': 2, 'light blue': 3,
+	 			   'orange': 4, 'yellow': 5, 'dark blue': 6, 'red': 7}
 	PointParams = {'plus': 1, 'cross': 2, 'plus and cross': 3, 'square and dot': 4,
 				   'solid square': 5, 'circle and dot': 6, 'solid circle': 7,
 				   'triangle and dot': 8, 'solid triangle': 9, 'inv solid triangle': 11}
@@ -84,18 +84,18 @@ def gnuplot(fig_params, plot_params, data, output_file):
 	# Set figure parameters
 	if fig_params.terminal == 'xterm':
 		term_set = ('set terminal '+fig_params.terminal+' persist; ')
-		if fig_params.color == True:
-			term_set += ' color'
-		if fig_params.colortext == True:
-			term_set += ' colortext'
-		if fig_params.standalone == True:
-			term_set += ' standalone'
 	elif fig_params.terminal == 'epslatex':
 		term_set = ('set terminal '+fig_params.terminal+' size '+str(fig_params.fig_size[0])
 					+fig_params.units+', '+str(fig_params.fig_size[1])+fig_params.units)
 	elif fig_params.terminal == 'eps':
 		term_set = ('set size square; set terminal postscript eps size '+str(fig_params.fig_size[0])
 					+fig_params.units+', '+str(fig_params.fig_size[1])+fig_params.units)
+	if fig_params.color == True:
+		term_set += ' color'
+	if fig_params.colortext == True:
+		term_set += ' colortext'
+	if fig_params.standalone == True and fig_params.terminal == 'epslatex':
+		term_set += ' standalone'
 	term_set = term_set + ' ' + fig_params.border_line+'; '
 	print(term_set)
 	# Set output file parameters
@@ -181,7 +181,7 @@ y = np.cos(w_0*t)
 
 # %% Plot with Gnuplot
 fig_params = FigParams(terminal='eps', fig_size=[8, 8], units='cm', 
-			  	 color=True, colortext=True, standalone=True, border_line='solid')
+			  	 color=True, colortext=True, standalone=False, border_line='solid')
 
 plot_params = PlotParams(plot_type='lines', color='black', line_type='solid', 
 				 line_width=3, point_type='solid circle', notitle=True, 
