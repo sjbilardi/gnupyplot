@@ -7,7 +7,8 @@ import sys
 import os
 
 class FigParams:
-	'''For holding the figure parameters to be passed to Gnuplot.'''
+	'''For holding the figure parameters to be passed to Gnuplot.
+	   Note that "standalone" is for use with "epslatex" only.'''
 
 	def __init__(self, terminal='epslatex', fig_size=[8, 8], units='cm', 
 			  	 color=True, colortext=True, standalone=False, border_line='solid'):
@@ -21,12 +22,14 @@ class FigParams:
 		self.border_line = border_line
 
 class PlotParams:
-	'''For holding the plotting parameters for Gnuplot'''
+	'''For holding the plotting parameters for Gnuplot.'''
 
 	def __init__(self, plot_type='lines', color='black', line_type='solid', 
 				 line_width=3, point_type='solid circle', notitle=True, 
-				 line_dash='none', xlim='none', ylim='none', rotate_tick_vals='none',
-				 error_bars=None, fit_type='none'):
+				 line_dash='none', xlim=None, ylim=None, rotate_tick_vals=None,
+				 xlabel=None, ylabel=None, xtick_label_format=None, 
+				 ytick_label_format=None, error_bars=None, 
+				 fit_type=None, graph_label=None, mxticks=None, myticks=None):
 
 		self.plot_type = plot_type
 		self.color = color
@@ -38,8 +41,15 @@ class PlotParams:
 		self.xlim = xlim
 		self.ylim = ylim
 		self.rotate_tick_vals = rotate_tick_vals
+		self.xlabel = xlabel
+		self.ylabel = ylabel
+		self.xtick_label_format = xtick_label_format
+		self.ytick_label_format = ytick_label_format
 		self.error_bars = error_bars
 		self.fit_type = fit_type
+		self.graph_label = graph_label
+		self.mxticks = mxticks
+		self.myticks = myticks
 
 def _make_data_file(data, output_file, errors=None):
 	'''Will write all data to a file so it can be sent to 
@@ -96,6 +106,23 @@ def gnuplot(fig_params, plot_params, data, output_file):
 	print(output)
 
 	# Set plotting parameters
+	args = ''
+	if plot_params.mxticks:
+		args += 'set mxtics '+str(plot_params.mxticks)+'; '
+	if plot_params.myticks:
+		args += 'set mytics '+str(plot_params.myticks)+'; '
+	if plot_params.xlim:
+		args += 'set xrange ['+str(plot_params.xlim[0])+':'+str(plot_params.xlim[1])+']; '
+	if plot_params.ylim:
+		args += 'set yrange ['+str(plot_params.ylim[0])+':'+str(plot_params.ylim[1])+']; '
+	if plot_params.xlabel:
+		args += 'set xlabel \''+plot_params.xlabel+'\'; '
+	if plot_params.ylabel:
+		args += 'set ylabel \''+plot_params.ylabel+'\'; '
+	if plot_params.xtick_label_format:
+		args += 'set format x \''+plot_params.xtick_label_format+'\'; '
+	if plot_params.ytick_label_format:
+		args += 'set format y \''+plot_params.ytick_label_format+'\'; '
 	# If a function is given
 	if len(data) == 1:
 		plot = ('plot '+data+' with '+plot_params.plot_type+' lt '+str(PointParams[plot_params.point_type])
@@ -132,9 +159,9 @@ def gnuplot(fig_params, plot_params, data, output_file):
 	# 		print(str(x[val]) + '\t' + str(y[val]) + '; ')
 	# data = plot_params.function
 	if fig_params.terminal == 'epslatex' or fig_params.terminal == 'eps':
-		cmd = ('gnuplot -e \"'+term_set+output+plot+' \"')
+		cmd = ('gnuplot -e \"'+term_set+output+args+plot+' \"')
 	elif fig_params.terminal == 'xterm':
-		cmd = ('xterm -hold -e gnuplot -e \"'+term_set+plot+'\"')
+		cmd = ('xterm -hold -e gnuplot -e \"'+term_set+args+plot+'\"')
 	# launch gnuplot
 	print(cmd)
 	call(cmd, shell=True)
@@ -157,9 +184,11 @@ fig_params = FigParams(terminal='eps', fig_size=[8, 8], units='cm',
 			  	 color=True, colortext=True, standalone=True, border_line='solid')
 
 plot_params = PlotParams(plot_type='lines', color='black', line_type='solid', 
-				 line_width=2, point_type='solid circle', notitle=True, 
-				 line_dash='none', xlim='none', ylim='none', rotate_tick_vals='none',
-				 error_bars=None, fit_type='none')
+				 line_width=3, point_type='solid circle', notitle=True, 
+				 line_dash='none', xlim=[-5,5], ylim=[-2,2], rotate_tick_vals=None,
+				 xlabel='X Values', ylabel='Y Values', xtick_label_format='%.2f', 
+				 ytick_label_format='%.2f', error_bars=None, fit_type=None, 
+				 graph_label=None, mxticks=3, myticks=3)
 
 output_file = 'plots/output'
 data = gnuplot(fig_params=fig_params, plot_params=plot_params,
