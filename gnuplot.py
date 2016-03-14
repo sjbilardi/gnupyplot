@@ -103,18 +103,20 @@ def gnuplot(fig_params, plot_params, data, output_file, special_params=None):
 	if fig_params.terminal == 'xterm':
 		term_set = ('set terminal '+fig_params.terminal+' persist; ')
 	elif fig_params.terminal == 'epslatex':
-		term_set = ('set terminal '+fig_params.terminal+' size '+str(fig_params.fig_size[0])
+		term_set = ('set size square; set terminal '+fig_params.terminal+' size '+str(fig_params.fig_size[0])
 					+fig_params.units+', '+str(fig_params.fig_size[1])+fig_params.units)
 	elif fig_params.terminal == 'eps':
 		term_set = ('set size square; set terminal postscript eps size '+str(fig_params.fig_size[0])
-					+fig_params.units+', '+str(fig_params.fig_size[1])+fig_params.units)
+					+fig_params.units+', '+str(fig_params.fig_size[1])+fig_params.units+' font \', '
+					+str(plot_params.font_size)+'\'')
 	if fig_params.color == True:
 		term_set += ' color'
 	if fig_params.colortext == True:
-		term_set += ' colortext'
+		term_set += ' colortext '
 	if fig_params.standalone == True and fig_params.terminal == 'epslatex':
 		term_set += ' standalone'
-	term_set = term_set + ' \', '+str(plot_params.font_size)+'\' '+fig_params.border_line+'; '
+	term_set += fig_params.border_line+'; '
+	# term_set += 'set key font \', '+str(plot_params.font_size)+'\'; '
 	print(term_set)
 	# Set output file parameters
 	if fig_params.terminal == 'epslatex':
@@ -136,7 +138,7 @@ def gnuplot(fig_params, plot_params, data, output_file, special_params=None):
 	if plot_params.xlabel:
 		args += 'set xlabel \''+plot_params.xlabel+'\'; '
 	if plot_params.ylabel:
-		args += 'set ylabel \''+plot_params.ylabel+'\'; '
+		args += 'set ylabel \''+plot_params.ylabel+'\' offset 2; '
 	if plot_params.xtick_label_format:
 		args += 'set format x \''+plot_params.xtick_label_format+'\'; '
 	if plot_params.ytick_label_format:

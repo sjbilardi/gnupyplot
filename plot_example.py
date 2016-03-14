@@ -12,7 +12,7 @@ y4 = np.cos(w_0*t + 3*np.pi/4)
 y5 = np.cos(w_0*t + 2*np.pi)
 
 # %% Plot with Gnuplot
-fig_params = FigParams(terminal='eps', fig_size=[8, 8], units='cm', 
+fig_params = FigParams(terminal='epslatex', fig_size=[8, 8], units='cm', 
 			  	 color=True, colortext=True, standalone=False, border_line='solid')
 
 plot_params = PlotParams(plot_type='lines', color='black', line_type='solid', 
@@ -28,7 +28,7 @@ special_params = SpecialParams(multi_color=['dark blue', 'light blue', 'green', 
 	Give output file path and name; do not specify an extension, 
     this will be done automatically
 '''
-output_file = 'plots/output'
+output_file = 'plots/output_latex'
 data = gnuplot(fig_params=fig_params, plot_params=plot_params,
 		data=[t, y, t, y2, t, y3, t, y4], output_file=output_file,
 		special_params=special_params)
