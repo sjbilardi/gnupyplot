@@ -148,8 +148,9 @@ def gnuplot(fig_params, plot_params, data, output_file, special_params=None):
 	# If a list of data is given
 	else:
 		plot = ''
+		number = 0
 		write_data, data_file = _make_data_file(data=data, output_file=output_file, errors=plot_params.error_bars)
-		for data_vars in np.arange(1, (len(data)+1), 2):
+		for data_vars in np.arange(1, (len(data)), 2):
 			if len(data[0]) == len(data[1]):
 				if write_data == True:
 					if data_vars == 1:
@@ -158,15 +159,15 @@ def gnuplot(fig_params, plot_params, data, output_file, special_params=None):
 							str(PointParams[plot_params.point_type]))
 					if special_params.multi_color:
 						if data_vars == 1:
-							plot += ' lc '+str(ColorParams[special_params.multi_color[data_vars-1]])
+							plot += ' lc '+str(ColorParams[special_params.multi_color[number]])
 						else:
-							plot += ' lc '+str(ColorParams[special_params.multi_color[data_vars-(data_vars-1)]])
+							plot += ' lc '+str(ColorParams[special_params.multi_color[data_vars-(data_vars - number)]])
 					else:
 						plot += ' lc '+str(ColorParams[plot_params.color])
 					plot += ' lw '+str(plot_params.line_width)+' dt '+str(LineDashType[plot_params.line_dash])
 					if plot_params.notitle == True:
 						plot += ' notitle'
-					if data_vars == 1:
+					if data_vars != (len(data) - 1):
 						plot += ',\\\n'
 					else:
 						plot += '; '
@@ -176,6 +177,7 @@ def gnuplot(fig_params, plot_params, data, output_file, special_params=None):
 			else:
 				print('X and Y must be same size.')
 				return 'X and Y not the same size'
+			number += 1
 		print(plot)	
 	# make final command strings
 	if fig_params.terminal == 'epslatex' or fig_params.terminal == 'eps':
