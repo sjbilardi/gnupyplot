@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 from subprocess import call
-import subprocess
-import seaborn as sns
 import numpy as np
 import sys
 import os
@@ -30,7 +28,8 @@ class PlotParams:
 				 line_dash='none', xlim=None, ylim=None, rotate_tick_vals=None,
 				 xlabel=None, ylabel=None, xtick_label_format=None, 
 				 ytick_label_format=None, error_bars=None, 
-				 fit_type=None, graph_label=None, mxticks=None, myticks=None):
+				 fit_type=None, graph_label=None, mxticks=None, myticks=None,
+				 font_size=10):
 
 		self.plot_type = plot_type
 		self.color = color
@@ -51,6 +50,7 @@ class PlotParams:
 		self.graph_label = graph_label
 		self.mxticks = mxticks
 		self.myticks = myticks
+		self.font_size = font_size
 
 def _make_data_file(data, output_file, errors=None):
 	'''Will write all data to a file so it can be sent to 
@@ -68,7 +68,7 @@ def _make_data_file(data, output_file, errors=None):
 		return False, None
 
 
-def gnuplot(fig_params, plot_params, data, output_file):
+def plot_with_gnuplot(fig_params, plot_params, data, output_file):
 	'''Will pass arguments to Gnuplot to 
 	   for plotting'''
 
@@ -97,7 +97,7 @@ def gnuplot(fig_params, plot_params, data, output_file):
 		term_set += ' colortext'
 	if fig_params.standalone == True and fig_params.terminal == 'epslatex':
 		term_set += ' standalone'
-	term_set = term_set + ' ' + fig_params.border_line+'; '
+	term_set = term_set + ' \', '+str(plot_params.font_size)+'\''+fig_params.border_line+'; '
 	print(term_set)
 	# Set output file parameters
 	if fig_params.terminal == 'epslatex':

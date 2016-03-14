@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from gnuplot import FigParams, PlotParams, gnuplot
+from gnuplot import FigParams, PlotParams, plot_with_gnuplot
 
 # %% Make x and y values
 w_0 = 2 # set angular frequency
@@ -16,11 +16,11 @@ plot_params = PlotParams(plot_type='lines', color='black', line_type='solid',
 				 line_dash='none', xlim=[-5,5], ylim=[-2,2], rotate_tick_vals=None,
 				 xlabel='X Values', ylabel='Y Values', xtick_label_format='%.2f', 
 				 ytick_label_format='%.2f', error_bars=None, fit_type=None, 
-				 graph_label=None, mxticks=3, myticks=3)
+				 graph_label=None, mxticks=3, myticks=3, font_size=20)
 ''' 
 	Give output file path and name; do not specify an extension, 
     this will be done automatically
 '''
 output_file = 'plots/output'
-data = gnuplot(fig_params=fig_params, plot_params=plot_params,
+data = plot_with_gnuplot(fig_params=fig_params, plot_params=plot_params,
 		data=[t, y], output_file=output_file)
