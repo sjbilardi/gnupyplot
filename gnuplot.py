@@ -52,6 +52,17 @@ class PlotParams:
 		self.myticks = myticks
 		self.font_size = font_size
 
+class SpecialParams:
+	'''
+		Parameters that will override all other parameters. Note
+		that "multi_color" is for setting the color of each plot 
+		in a single figure.
+	'''
+
+	def __init__(self, multi_color=None):
+
+		self.multi_color = multi_color
+
 def _make_data_file(data, output_file, errors=None):
 	'''Will write all data to a file so it can be sent to 
 	   gunuplot later. File is written as a "txt" file. NOTE:
@@ -61,14 +72,20 @@ def _make_data_file(data, output_file, errors=None):
 		extension = '.data'
 		file = open(output_file+extension, 'w')
 		for val in np.arange(len(data[0])):
-			file.write('%s\t%s\n' % (str(data[0][val]), str(data[1][val])))
+			temp = ' '
+			for variable in np.arange(len(data)):
+				temp += str(data[variable][val])
+				if variable != (len(data) - 1):
+					temp += '\t'
+			temp += '\n'
+			file.write(temp)
 		return True, output_file+extension
 	else:
 		print('Sorry. Not supported yet.')
 		return False, None
 
 
-def plot_with_gnuplot(fig_params, plot_params, data, output_file):
+def gnuplot(fig_params, plot_params, data, output_file, special_params=None):
 	'''Will pass arguments to Gnuplot to 
 	   for plotting'''
 
@@ -97,7 +114,7 @@ def plot_with_gnuplot(fig_params, plot_params, data, output_file):
 		term_set += ' colortext'
 	if fig_params.standalone == True and fig_params.terminal == 'epslatex':
 		term_set += ' standalone'
-	term_set = term_set + ' \', '+str(plot_params.font_size)+'\''+fig_params.border_line+'; '
+	term_set = term_set + ' \', '+str(plot_params.font_size)+'\' '+fig_params.border_line+'; '
 	print(term_set)
 	# Set output file parameters
 	if fig_params.terminal == 'epslatex':
@@ -130,25 +147,36 @@ def plot_with_gnuplot(fig_params, plot_params, data, output_file):
 				+' lc '+str(ColorParams[plot_params.color])+' lw '+str(plot_params.line_width)+' dt '+str(LineDashType[plot_params.line_dash]))
 	# If a list of data is given
 	else:
-		if len(data) == 2:
+		plot = ''
+		write_data, data_file = _make_data_file(data=data, output_file=output_file, errors=plot_params.error_bars)
+		for data_vars in np.arange(1, (len(data)+1), 2):
 			if len(data[0]) == len(data[1]):
-				write_data, data_file = _make_data_file(data=data, output_file=output_file, errors=plot_params.error_bars)
 				if write_data == True:
-					plot = ('plot \''+data_file+'\' using 1:2 with '+plot_params.plot_type+' lt '+str(PointParams[plot_params.point_type])
-							+' lc '+str(ColorParams[plot_params.color])+' lw '+str(plot_params.line_width)+' dt '+str(LineDashType[plot_params.line_dash]))
+					if data_vars == 1:
+						plot += 'plot '
+					plot += ('\''+data_file+'\' using '+str(int(data_vars))+':'+str(int(data_vars+1))+' with '+plot_params.plot_type+' lt '+
+							str(PointParams[plot_params.point_type]))
+					if special_params.multi_color:
+						if data_vars == 1:
+							plot += ' lc '+str(ColorParams[special_params.multi_color[data_vars-1]])
+						else:
+							plot += ' lc '+str(ColorParams[special_params.multi_color[data_vars-(data_vars-1)]])
+					else:
+						plot += ' lc '+str(ColorParams[plot_params.color])
+					plot += ' lw '+str(plot_params.line_width)+' dt '+str(LineDashType[plot_params.line_dash])
+					if plot_params.notitle == True:
+						plot += ' notitle'
+					if data_vars == 1:
+						plot += ',\\\n'
+					else:
+						plot += '; '
 				else:
 					print('Error writing data to file.')
 					return 'Error writing to file.'
 			else:
 				print('X and Y must be same size.')
 				return 'X and Y not the same size'
-		else:
-			print('Can not support more than X and Y right now.')
-			return 'Can not support more than X and Y'
-	if plot_params.notitle == True:
-		plot = plot + ' notitle'
-	plot += ';'
-	print(plot)	
+		print(plot)	
 	# make final command strings
 	if fig_params.terminal == 'epslatex' or fig_params.terminal == 'eps':
 		cmd = ('gnuplot -e \"'+term_set+output+args+plot+' \"')
@@ -157,5 +185,5 @@ def plot_with_gnuplot(fig_params, plot_params, data, output_file):
 	# launch gnuplot
 	print(cmd)
 	call(cmd, shell=True)
-	return True
+	return data
 	

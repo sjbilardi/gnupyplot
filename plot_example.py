@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import numpy as np
-from gnuplot import FigParams, PlotParams, plot_with_gnuplot
+from gnuplot import FigParams, PlotParams, SpecialParams, gnuplot
 
 # %% Make x and y values
 w_0 = 2 # set angular frequency
 t = np.linspace(-10, 10, 10000)
 y = np.cos(w_0*t)
+y2 = np.sin(w_0*t)
 
 # %% Plot with Gnuplot
 fig_params = FigParams(terminal='eps', fig_size=[8, 8], units='cm', 
@@ -17,10 +18,13 @@ plot_params = PlotParams(plot_type='lines', color='black', line_type='solid',
 				 xlabel='X Values', ylabel='Y Values', xtick_label_format='%.2f', 
 				 ytick_label_format='%.2f', error_bars=None, fit_type=None, 
 				 graph_label=None, mxticks=3, myticks=3, font_size=20)
+
+special_params = SpecialParams(multi_color=['dark blue', 'green'])
 ''' 
 	Give output file path and name; do not specify an extension, 
     this will be done automatically
 '''
 output_file = 'plots/output'
-data = plot_with_gnuplot(fig_params=fig_params, plot_params=plot_params,
-		data=[t, y], output_file=output_file)
+data = gnuplot(fig_params=fig_params, plot_params=plot_params,
+		data=[t, y, t, y2], output_file=output_file,
+		special_params=special_params)
