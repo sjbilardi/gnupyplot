@@ -17,7 +17,10 @@ plot_params = PlotParams(plot_type='lines', color='black', line_type='solid',
 				 xlabel='X Values', ylabel='Y Values', xtick_label_format='%.2f', 
 				 ytick_label_format='%.2f', error_bars=None, fit_type=None, 
 				 graph_label=None, mxticks=3, myticks=3)
-
+''' 
+	Give output file path and name; do not specify an extension, 
+    this will be done automatically
+'''
 output_file = 'plots/output'
 data = gnuplot(fig_params=fig_params, plot_params=plot_params,
 		data=[t, y], output_file=output_file)
